@@ -7,9 +7,17 @@ import random
 import cv2
 import numpy as np
 import time
+import argparse
 
 import torch
 import torchvision.transforms as transforms
+
+
+parser = argparse.ArgumentParser(description='demo')
+parser.add_argument('--vis', action='store_true', help='whether to visualize')
+parser.add_argument('--save', action='store_true', help='save video')
+
+args = parser.parse_args()
 
 
 def demo(data_path, model, save_video=False, vis=False):
@@ -54,7 +62,7 @@ def demo(data_path, model, save_video=False, vis=False):
     if vis:
         cv2.namedWindow('demo', 0)
     if save_video:
-        fourcc = cv2.VideoWriter_fourcc(*'XVID')  # 保存视频的编码
+        fourcc = cv2.VideoWriter_fourcc(*'XVID')
         out = cv2.VideoWriter(f"./output/output.avi", fourcc, 30.0, (256, 256))
 
     for i in range(len(img_path)):
@@ -118,7 +126,7 @@ def demo(data_path, model, save_video=False, vis=False):
 
         if save_video:
             out.write(o_search)
-        cv2.waitKey(30)
+        cv2.waitKey(1)
 
     score = score / len(img_path)
     print(f'score: {score}')
@@ -135,9 +143,9 @@ if __name__ == '__main__':
     net.to(device)
     net.eval()
 
-    total_score = demo(data_path, net, save_video=False,vis=True)
+    total_score = demo(data_path, net, save_video=args.save,vis=args.vis)
     print(f'score: {total_score}')
 
     total_num = sum(p.numel() for p in net.parameters())
     trainable_num = sum(p.numel() for p in net.parameters() if p.requires_grad)
-    print(f'Total: {total_num}, Trainable: {trainable_num}')
+    print(f'Total parameters: {total_num}, Trainable parameters: {trainable_num}')
