@@ -11,6 +11,7 @@ The soucre code and trained models of SiamITO: A Light Siamese Network for Infra
  torch # recommend 1.8.2+cu111
  torchvision
  visdom
+ pillow
  ```
  
  ## Usage
